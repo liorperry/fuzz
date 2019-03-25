@@ -1,0 +1,4 @@
+attr
+Flask==0.12.1
+Flask-RESTful==0.3.5
+pytest==3.0.7
