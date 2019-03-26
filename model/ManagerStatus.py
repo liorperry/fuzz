@@ -4,9 +4,16 @@ from enum import Enum
 
 @attr.s
 class ManagerStatus:
-    def __init__(self) -> None:
+    def __init__(self, uuid) -> None:
         super().__init__()
         self.status = Status.NOT_INITIATED
+        self.id = uuid
+
+    def __repr__(self):
+        return {
+            'id': self.id,
+            'status': self.status
+        }
 
 
 class Status(Enum):

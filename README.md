@@ -1,13 +1,23 @@
-# Flask RESTful API example
-_(This repo is part of our [Free Flask Tutorial](https://flask-tutorial.com))_
+# Fuzzer SDK for regular people
 
-This repo shows how to create a simple RESTful API using the Flask web framework. Among the included features, you'll see how to:
-* Return custom status codes and headers ⚡️
-* Create resources using POST requests 📬
-* Deleting resources using DELETE requests 📭
-* Test the application using Flask's [test client](http://flask.pocoo.org/docs/latest/testing) 🔮
+This repo is intended as a test case for creating a python general purpose SDK for building fuzzers;
 
-**There's a detailed video lesson on how to perform the deploy in our [Free Flask Tutorial](https://flask-tutorial.com).**
+The intention of this framework is to be executed in a distributed environment in which each node orchestrates its fuzzing sessions internally.
+
+A shared location is used to commute the next data elements:
+* Samples Corpus for input to the fuzzing
+* Logging repository
+* Coverage and statistics repository
+* Crash repository 
+
+### Main components
+The SDK composed of the next components:
+* Main Fuzzer dispatcher with life cycle awareness & resource monitoring ⚡️
+* Generator strategy provider - serving the fuzzer with samples from corpus(es) ⚡️
+* Logging Service collecting and minimizing fuzzing run logs 📬
+* Coverage Service collecting and minimizing fuzzing run statistics  📬
+* Crash analyzer Service collecting analyzing crash 📬
+
 
 ## Install guide
 
@@ -36,8 +46,6 @@ $ python run_app.py
 ## Running the app
 
 ```bash
-# Step 3 requires a DB created
-$ sqlite3 library.db < library-schema.sql
 $ python run_app.py
 ```
 

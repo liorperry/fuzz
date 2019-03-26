@@ -1,0 +1,67 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Fuzzer Client status"
+  },
+  "basePath": "/fuzz",
+  "tags": [
+    {
+      "name": "Fuzzer",
+      "description": "\n Everything about Fuzzer Engine."
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/status": {
+      "get": {
+        "tags": [
+          "Get Fuzzer status"
+        ],
+        "description": "Gets the fuzzer status details",
+        "summary": "Gets the fuzzer status details",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Fuzzer Status details"
+          }
+        }
+      }
+    },
+    "/do/{command}": {
+      "get": {
+        "tags": [
+          "Fuzzer execute command "
+        ],
+        "summary": "Execute fuzzer given command",
+        "parameters": [
+          {
+            "name": "command",
+            "in": "path",
+            "description": "fuzzer command",
+            "required": true,
+            "type": "string",
+            "enum": ["run", "stop", "pause","restart"]
+          }
+        ],
+        "description": "Execute fuzzer given command",
+        "responses": {
+          "200": {
+            "description": "Returns <code>200</code> Fuzzer command execution indication or <code>404</code>"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  }
+}
