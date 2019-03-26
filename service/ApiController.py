@@ -51,7 +51,7 @@ def do(command):
     func = switcher.get(command, lambda: "Invalid command")
     # Execute the function
     result = func()
-    content = json.dumps(result)
+    content = json.dumps(result.toJSON())
     return content, 200, {'Content-Type': JSON_MIME_TYPE}
 
 

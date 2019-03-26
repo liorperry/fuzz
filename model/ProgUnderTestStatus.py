@@ -1,9 +1,6 @@
 from enum import Enum
 
-import attr
 
-
-@attr.s
 class ProgUnderTestStatus:
     def __init__(self) -> None:
         super().__init__()

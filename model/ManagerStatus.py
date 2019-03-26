@@ -1,19 +1,22 @@
-import attr
+import json
+import uuid
 from enum import Enum
 
 
-@attr.s
-class ManagerStatus:
-    def __init__(self, uuid) -> None:
-        super().__init__()
+class MyManagerStatus:
+
+    def __init__(self):
         self.status = Status.NOT_INITIATED
-        self.id = uuid
+        self.id = uuid.uuid4().hex
 
     def __repr__(self):
         return {
             'id': self.id,
             'status': self.status
         }
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__,sort_keys=True, indent=4)
 
 
 class Status(Enum):

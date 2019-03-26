@@ -1,8 +1,6 @@
 import json
-import attr
 
 
-@attr.s
 class RunCommand:
     def __init__(self, role=None, concurrency=10, timeout=60*3) -> None:
         super().__init__()

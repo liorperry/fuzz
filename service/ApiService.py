@@ -1,7 +1,6 @@
 import attr
-import uuid
 
-from model import ManagerStatus
+from model.ManagerStatus import MyManagerStatus
 from service.ExternalApi import ExternalApi
 
 
@@ -13,7 +12,7 @@ class ExternalApiService(ExternalApi):
         self.status = None
 
     def run(self):
-        self.status = ManagerStatus(uuid.uuid5())
+        self.status = MyManagerStatus()
         return self.status
 
     def pause(self):

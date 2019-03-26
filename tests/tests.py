@@ -43,5 +43,6 @@ class StepApiControllerTestCase(unittest.TestCase):
         self.assertEqual(resp.status_code, 404)
 
     def test_swagger_api(self):
-        resp = self.app.get('/fuzz/api/docs')
+        resp = self.app.get('/fuzz/api/docs/')
+        # todo check response content contians '<title>Fuzzer</title>'
         self.assertEqual(resp.status_code, 200)
