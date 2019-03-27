@@ -2,10 +2,12 @@ import json
 import uuid
 
 from model import ProgUnderTestStatus
+from model.Status import Status
 
 
 class MyManagerStatus:
-    def __init__(self):
+    def __init__(self, command):
+        self.command = command
         self.status = Status.NOT_INITIATED
         self.id = uuid.uuid4().hex
         self.progs = dict()
@@ -23,9 +25,3 @@ class MyManagerStatus:
         return self.progs[id]
 
 
-
-class Status:
-    NOT_INITIATED = 'NOT_INITIATED'
-    INITIATED = 'INITIATED'
-    RUNNING = 'RUNNING'
-    PASSED = 'PASSED'

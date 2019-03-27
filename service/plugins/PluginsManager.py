@@ -1,3 +1,4 @@
+import importlib
 import os
 
 
@@ -13,5 +14,7 @@ class PluginsMgr:
 
     # get plugin metadata
     def inspect(self, plugin):
-        return "return plugin metatada"
+        module = importlib.import_module('service.plugins' +'.' + plugin)
+        my_class = getattr(module, plugin +'PluginMetadata')
+        return my_class().toJson()
 

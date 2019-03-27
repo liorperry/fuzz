@@ -1,18 +1,17 @@
 # File: driver.py
-import sys, getopt
 import asyncio
+import getopt
+import sys
+
+from service.plugins.BaseDriver import baseDriver
 
 
-class ProgramUnderTest:
-    def __init__(self, args):
+class Driver(baseDriver):
+
+	def init(self, args):
 		self.output_dir = ''
 		self.db = 'dbtest.db'
-		self.init_parse(args)
-		# self.input_file = 'sqlite_cmd.sql'
-		# self.sqlite_path = '..\sqlite327\sqlite3.exe'
-		# self.output_file = 'data.csv'
 
-	def init_parse(self, args):
 		try:
 			options, remainder = getopt.getopt(args, 'i:o:', ['output=','input=','target-path=','output-dir='])
 		except getopt.GetoptError as err:
@@ -26,11 +25,6 @@ class ProgramUnderTest:
 				self.sqlite_path = arg
 			elif opt == '--output-dir':
 				self.output_dir = arg + '/'
-
-	def start(self):
-		asyncio.set_event_loop_policy(
-			asyncio.WindowsProactorEventLoopPolicy())
-		asyncio.run(self.runGenerator())
 
 	async def runGenerator(self):
 		cmd = self.sqlite_path + ' -header -csv '+ self.db +' < '+ self.input_file +' > ' + self.output_file
@@ -48,7 +42,7 @@ class ProgramUnderTest:
 
 def main():
 	try:
-		_driver = ProgramUnderTest(sys.argv[1:])
+		_driver = Driver(sys.argv[1:])
 		_driver.start()
 	except Exception as e:
 		print('in main: ', e)

@@ -1,7 +1,7 @@
 import json
 import uuid
 
-from model.ManagerStatus import Status
+from model.Status import Status
 
 
 class ProgUnderTestStatus:

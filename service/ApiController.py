@@ -1,9 +1,10 @@
 import json
 
-from flask import abort, Flask, logging, send_from_directory
+from flask import abort, Flask, logging, send_from_directory, request
 from flask_swagger_ui import get_swaggerui_blueprint
 from service import apiService
-from .utils import JSON_MIME_TYPE
+from service.plugins.PluginsManager import PluginsMgr
+from .utils import JSON_MIME_TYPE, json_response
 
 app = Flask(__name__, static_url_path='/static')
 log = logging.getLogger(__name__)
@@ -35,14 +36,41 @@ def init():
     app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
 
-@app.route('/fuzz/do/<string:command>')
-def do(command):
+@app.route('/fuzz/<string:role>', methods=['POST'])
+def do(role):
     # todo - execute command
-    if command is None:
+    if role is None:
+        abort(404)
+
+    if request.content_type != JSON_MIME_TYPE:
+        error = json.dumps({'error': 'Invalid Content Type'})
+        return json_response(error, 400)
+
+    data = request.json
+    if not all([data.get('role'), data.get('cmd')]):
+        error = json.dumps({'error': 'Missing field/s (role, cmd)'})
+        return json_response(error, 400)
+
+    switcher = {
+        "pause": apiService.pause,
+        "restart": apiService.restart,
+        "stop": apiService.stop
+    }
+
+    func = switcher.get(apiService.run(data), lambda: "Invalid command")
+    # Execute the function
+    result = func()
+    content = json.dumps(result.toJSON())
+    return content, 200, {'Content-Type': JSON_MIME_TYPE}
+
+
+@app.route('/fuzz/<string:role>/do/<string:command>')
+def do(role, command):
+    # todo - execute command
+    if (role is None) or (command is None):
         abort(404)
 
     switcher = {
-        "run": apiService.run,
         "pause": apiService.pause,
         "restart": apiService.restart,
         "stop": apiService.stop
@@ -50,7 +78,7 @@ def do(command):
 
     func = switcher.get(command, lambda: "Invalid command")
     # Execute the function
-    result = func()
+    result = func(role)
     content = json.dumps(result.toJSON())
     return content, 200, {'Content-Type': JSON_MIME_TYPE}
 
@@ -64,6 +92,21 @@ def status():
         'running targets': 10,
     })
     return content, 200, {'Content-Type': JSON_MIME_TYPE}
+
+
+@app.route('/fuzz/plugins')
+def plugins():
+    content = PluginsMgr('service/plugins').plugins()
+    return json.dumps(content), 200, {'Content-Type': JSON_MIME_TYPE}
+
+
+@app.route('/fuzz/plugin/<string:name>')
+def plugin(name):
+    if name is None:
+        abort(404)
+
+    content = PluginsMgr('service/plugins').inspect(name)
+    return json.dumps(content), 200, {'Content-Type': JSON_MIME_TYPE}
 
 
 @app.route('/swagger')

@@ -1,5 +1,8 @@
 # File: generator.py
-from service.BaseGenerator import BaseGenerator
+import json
+import sys
+
+from service.plugins.BaseGenerator import BaseGenerator
 
 
 class Generator(BaseGenerator):

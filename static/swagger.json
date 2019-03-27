@@ -36,6 +36,44 @@
         }
       }
     },
+    "/plugins": {
+      "get": {
+        "tags": [
+          "Get Fuzzer plugins"
+        ],
+        "description": "Gets available plugins",
+        "summary": "Gets available plugins",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Available plugins"
+          }
+        }
+      }
+    },
+    "/plugin/{name}": {
+      "get": {
+        "tags": [
+          "Get specific plugin"
+        ],
+        "description": "Get specific plugin",
+        "summary": "Get specific plugin",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "plugin name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "plugin's details"
+          }
+        }
+      }
+    },
     "/do/{command}": {
       "get": {
         "tags": [
@@ -49,7 +87,12 @@
             "description": "fuzzer command",
             "required": true,
             "type": "string",
-            "enum": ["run", "stop", "pause","restart"]
+            "enum": [
+              "run",
+              "stop",
+              "pause",
+              "restart"
+            ]
           }
         ],
         "description": "Execute fuzzer given command",
