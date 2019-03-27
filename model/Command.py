@@ -1,7 +1,7 @@
 import json
 
 
-class RunCommand:
+class Command:
     def __init__(self, role=None, concurrency=10, timeout=60*3) -> None:
         super().__init__()
         self.role = role
@@ -22,5 +22,4 @@ class RunCommand:
 
     # f = JSONDecoder(object_hook = fromJson).decode('{"role": "myRole", "concurrency" : "100", "timeout": 10000 }')
     def fromJson(json_object):
-        if 'fname' in json_object:
-            return RunCommand(json_object['role'],json_object['concurrency'],json_object['timeout'])
+        return Command(json_object['role'], json_object['concurrency'], json_object['timeout'])

@@ -1,0 +1,10 @@
+{
+	"create": "CREATE VIRTUAL TABLE $table_name USING fts3($params);",
+	"alter": "ALTER TABLE $old_table_name RENAME TO $new_table_name;",
+	"insert": "INSERT INTO $table_name ($params) VALUES $values ;",
+	"update": "UPDATE $table_name SET $update_set WHERE $update_filter;",
+	"select": "SELECT $select_params FROM $table_name $matching;",
+	"delete": "DELETE FROM $table_name;",
+	"drop": "DROP TABLE $table_name;"
+}
+

@@ -46,3 +46,4 @@ class StepApiControllerTestCase(unittest.TestCase):
         resp = self.app.get('/fuzz/api/docs/')
         # todo check response content contians '<title>Fuzzer</title>'
         self.assertEqual(resp.status_code, 200)
+

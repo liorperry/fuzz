@@ -1,14 +1,25 @@
-from enum import Enum
+import json
+import uuid
+
+from model.ManagerStatus import Status
 
 
 class ProgUnderTestStatus:
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, command):
         self.status = Status.NOT_INITIATED
+        self.id = uuid.uuid4().hex
+        self.command = command
+
+    def id(self):
+        return self.id
+
+    def status(self):
+        return self.status
+
+    def command(self):
+        return self.command
+
+    def toJSON(self):
+        return json.dumps({'status': self.status, 'id': self.id, 'command': self.command})
 
 
-class Status(Enum):
-    NOT_INITIATED = 1
-    INITIATED = 2
-    RUNNING = 3
-    PASSED = 3
