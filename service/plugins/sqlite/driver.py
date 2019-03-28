@@ -1,6 +1,5 @@
 # File: driver.py
 import asyncio
-import getopt
 import sys
 
 from service.plugins.BaseDriver import baseDriver
@@ -11,22 +10,12 @@ class Driver(baseDriver):
 	def init(self, args):
 		self.output_dir = ''
 		self.db = 'dbtest.db'
+		self.output_file = args['output_file']
+		self.input_file = args['input_file']
+		self.sqlite_path = args['sqlite_path']
+		self.output_dir = args['output_dir']
 
-		try:
-			options, remainder = getopt.getopt(args, 'i:o:', ['output=','input=','target-path=','output-dir='])
-		except getopt.GetoptError as err:
-			print(err)
-		for opt, arg in options:
-			if opt in ('-o', '--output'):
-				self.output_file = arg
-			elif opt in ('-i', '--input'):
-				self.input_file = arg
-			elif opt == '--target-path':
-				self.sqlite_path = arg
-			elif opt == '--output-dir':
-				self.output_dir = arg + '/'
-
-	async def runGenerator(self):
+	async def runFuzzer(self):
 		cmd = self.sqlite_path + ' -header -csv '+ self.db +' < '+ self.input_file +' > ' + self.output_file
 		proc = await asyncio.create_subprocess_shell(cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
 

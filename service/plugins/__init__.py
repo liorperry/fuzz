@@ -1,0 +1,1 @@
+PLUGINS = 'service/plugins'

@@ -1,8 +1,8 @@
 import logging.config
 import os
-from logging import debug
 
-from service.ApiController import init, app
+from service import init
+from service.ApiController import initController, app
 from setup import FLASK_SERVER_NAME
 from setup import RESTPLUS_SWAGGER_UI_DOC_EXPANSION, RESTPLUS_VALIDATE, RESTPLUS_MASK_SWAGGER, \
     RESTPLUS_ERROR_404_HELP, FLASK_DEBUG
@@ -22,12 +22,8 @@ def configure_app(flask_app):
 
 def initialize_app(flask_app):
     init()
+    initController()
     configure_app(flask_app)
-    # blueprint = Blueprint('api', __name__, url_prefix='/api')
-    # api.init_app(blueprint)
-    # api.add_namespace(ns)
-    # api.add_namespace(ns)
-    # flask_app.register_blueprint(blueprint)
 
 
 def main():

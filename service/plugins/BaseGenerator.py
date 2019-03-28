@@ -11,15 +11,10 @@ class BaseGenerator(metaclass=ABCMeta):
         self.randPkg = Randomize()
         self.max_file_lines = 50
 
-    def init_parse(self, args):
-        try:
-            options, remainder = getopt.getopt(args, '', ['output-dir='])
-        except getopt.GetoptError as err:
-            print(err)
-        for opt, arg in options:
-            if opt in ('--output-dir'):
-                self.output_dir = arg + '/'
-
     @abstractmethod
     def generate(self):
+        pass
+
+    @abstractmethod
+    def init_parse(self):
         pass

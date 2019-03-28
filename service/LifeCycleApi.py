@@ -2,19 +2,19 @@
 import abc
 
 
-class ExternalApi(abc.ABC):
+class LifeCycleApi(abc.ABC):
     @abc.abstractmethod
-    def run(self):
+    def run(self, name):
         pass
 
     @abc.abstractmethod
-    def pause(self):
+    def pause(self, name):
         pass
 
     @abc.abstractmethod
-    def restart(self):
+    def restart(self, name):
         pass
 
     @abc.abstractmethod
-    def stop(self):
+    def stop(self, name):
         pass

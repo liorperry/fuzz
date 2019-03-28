@@ -1,37 +1,55 @@
-import attr
-
-from model.ManagerStatus import MyManagerStatus
-from model.ProgUnderTestStatus import ProgUnderTestStatus
-from service.ExternalApi import ExternalApi
+from service import modules
+from service.LifeCycleApi import LifeCycleApi
 
 
-@attr.s
-class ExternalApiService(ExternalApi):
+class ExternalApiService(LifeCycleApi):
 
     def __init__(self):
         super().__init__()
-        self.status = MyManagerStatus()
 
-    def run(self, command):
-        # todo get the correct ProgUnderTestStatus according to the command.role
-        status = ProgUnderTestStatus()
-        self.status.add(status)
-        # todo run the program under test
-        status.command(command['action'])
-        return self.status
+    def run(self, name: str = 'all'):
+        statuses = dict()
+        if name == 'all':
+            for key, value in modules.items():
+                statuses[key] = value.driver.run(name)
+        else:
+            module = modules[name]
+            statuses[name] = module.driver().run(name)
 
-    def pause(self, role):
-        return {
-            'role': role,
-            'command': 'pause'}
+        return statuses
 
-    def restart(self, role):
-        return {
-            'role': role,
-            'command': 'restart'}
+    # pause all
+    def pause(self, name: str = 'all'):
+        statuses = dict()
+        if name == 'all':
+            for key, value in modules.items():
+                statuses[key] = value.driver().pause(name)
+        else:
+            module = modules[name]
+            statuses[name] = module.driver().pause(name)
 
-    def stop(self, role):
-        return {
-            'role': role,
-            'command': 'stop'}
+        return statuses
 
+    # restart all
+    def restart(self, name: str = 'all'):
+        statuses = dict()
+        if name == 'all':
+            for key, value in modules.items():
+                statuses[key] = value.driver().restart(name)
+        else:
+            module = modules[name]
+            statuses[name] = module.driver().restart(name)
+
+        return statuses
+
+    # stop all
+    def stop(self, name: str = 'all'):
+        statuses = dict()
+        if name == 'all':
+            for key, value in modules.items():
+                statuses[key] = value.driver().stop(name)
+        else:
+            module = modules[name]
+            statuses[name] = module.driver().stop(name)
+
+        return statuses

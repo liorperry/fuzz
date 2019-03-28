@@ -1,11 +1,15 @@
 # File: generator.py
 import json
+import os
 import sys
 
 from service.plugins.BaseGenerator import BaseGenerator
 
 
 class Generator(BaseGenerator):
+	def init_parse(self, args):
+		self.output_dir = args['output_dir']
+		self.template_dir = args['template_dir']
 
 	def create(self, line):
 		tableN = self.randPkg.setNewTable()
@@ -48,7 +52,7 @@ class Generator(BaseGenerator):
 
 
 	def generate(self):
-		with open("sqlite_template.json", "r") as read_file:
+		with open(os.path.join(self.template_dir,"sqlite_template.json"), "r") as read_file:
 			json_data = json.load(read_file)
 
 		write_file = ''

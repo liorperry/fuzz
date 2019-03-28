@@ -1,8 +1,12 @@
 from abc import ABCMeta, abstractmethod
 
 
-class BasePluginMetadata(metaclass=ABCMeta, metaclass=ABCMeta, metaclass=ABCMeta, metaclass=ABCMeta, metaclass=ABCMeta,
-                         metaclass=ABCMeta):
+class BasePluginMetadata(metaclass=ABCMeta):
+
+
+    def __init__(self) -> None:
+        super().__init__()
+
     @abstractmethod
     def name(self):
         pass
@@ -25,4 +29,12 @@ class BasePluginMetadata(metaclass=ABCMeta, metaclass=ABCMeta, metaclass=ABCMeta
 
     @abstractmethod
     def additionalInfo(self):
+        pass
+
+    @abstractmethod
+    def driver(self):
+        pass
+
+    @abstractmethod
+    def swagger(self):
         pass

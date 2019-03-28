@@ -1,0 +1,88 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Sqlite Fuzzer client"
+  },
+  "basePath": "/fuzz/plugin/sqlite",
+  "tags": [
+    {
+      "name": "Sqlite Fuzzer ",
+      "description": "\n Sqlite Fuzzer plugin "
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/status": {
+      "get": {
+        "tags": [
+          "Get status"
+        ],
+        "description": "Gets status details",
+        "summary": "Gets status details",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Sqlite  Status details"
+          }
+        }
+      }
+    },
+    "/do/{command}": {
+      "post": {
+        "tags": [
+          "Fuzzer execute command "
+        ],
+        "summary": "Execute fuzzer given command",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "plugin name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "description": "Execute fuzzer given command",
+        "responses": {
+          "200": {
+            "description": "Returns <code>200</code> Fuzzer command execution indication or <code>404</code>"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Something": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "id": "1",
+        "name": "what",
+        "data": "value"
+      }
+    }
+  }
+}
