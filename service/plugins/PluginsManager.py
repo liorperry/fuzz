@@ -21,10 +21,12 @@ class PluginsMgr:
     def inspect(self, plugin):
         return self.module(plugin).toJson()
 
-    def module(self, plugin):
-        module = importlib.import_module('service.plugins' +'.' + plugin)
-        my_class = getattr(module, plugin +'PluginMetadata')
-        return my_class()
+    def module(self, plugin : str):
+        if not plugin.startswith('__'):
+           module = importlib.import_module('service.plugins' +'.' + plugin)
+           my_class = getattr(module, plugin +'PluginMetadata')
+           return my_class()
+
 
     def modules(self):
         return list(map(lambda p: self.module(p), self.plugins()))

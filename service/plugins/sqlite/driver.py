@@ -19,6 +19,7 @@ class Driver(baseDriver):
 	async def runFuzzer(self, runId):
 		currentDir = os.path.dirname(os.path.realpath(__file__))
 		self.log_file = os.path.join(self.runDir, 'log_')
+		self.db = os.path.join(self.runDir,self.db)
 
 		cmd = currentDir + self.sqlite_path + ' -header -csv '+ self.db +' < '+ self.metadata.output_dir +' > ' +self.log_file
 		proc = await asyncio.create_subprocess_shell(cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
