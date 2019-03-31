@@ -1,6 +1,8 @@
 import importlib
 import os
 
+from service.plugins.BasePluginMetadata import BasePluginMetadata
+
 
 class PluginsMgr:
     # todo scan plugins folder and list plugins
@@ -22,13 +24,15 @@ class PluginsMgr:
         return self.module(plugin).toJson()
 
     def module(self, plugin : str):
-        if not plugin.startswith('__'):
-           module = importlib.import_module('service.plugins' +'.' + plugin)
-           my_class = getattr(module, plugin +'PluginMetadata')
-           return my_class()
+       module = importlib.import_module('service.plugins' +'.' + plugin)
+       my_class = getattr(module, plugin +'PluginMetadata')
+       return my_class()
 
 
     def modules(self):
-        return list(map(lambda p: self.module(p), self.plugins()))
-
+        li = []
+        for plug in self.plugins():
+            if not plug.startswith('__'):
+                    li.append(self.module(plug))
+        return li
 
