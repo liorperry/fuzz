@@ -8,23 +8,21 @@ from service.plugins.sqlite.generator import Generator
 class sqlitePluginMetadata(BasePluginMetadata):
     def __init__(self) -> None:
         super().__init__()
-        self.name = 'sqlight'
+        self.name = 'sqlite'
         # -i sqlite_cmd.sql - o data.csv --target-path =..\sqlite327\sqlite3.exe
         args = dict()
         args['output_file'] = 'sqlite_cmd.sql'
         args['input_file'] = 'data.csv'
-        args['sqlite_path'] = '..\lib\sqlite3.exe'
-        args['output_dir'] = '../target'
+        args['log_file'] = 'log_'
+        args['sqlite_path'] = '/lib/sqlite3.exe'
+        args['output_dir'] = '/target'
         args['template_dir'] = os.getcwd()
 
-        self.generator = Generator(args)
-        self.driver = Driver(args, self.generator)
+        self.generator = Generator(args, self)
+        self.driver = Driver(args, self.generator, self)
 
     def name(self):
         return self.name
-
-    def command(self):
-        return 'sqlite_cmd.sql -o data.csv --target-path=..\sqlite327\sqlite3.exe'
 
     def generator(self):
         return Generator()

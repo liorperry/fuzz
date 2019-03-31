@@ -1,5 +1,6 @@
 # File: driver.py
 import asyncio
+import os
 import sys
 
 from service.plugins.BaseDriver import baseDriver
@@ -11,22 +12,28 @@ class Driver(baseDriver):
 		self.output_dir = ''
 		self.db = 'dbtest.db'
 		self.output_file = args['output_file']
+		self.log_file = args['log_file']
 		self.input_file = args['input_file']
 		self.sqlite_path = args['sqlite_path']
-		self.output_dir = args['output_dir']
 
-	async def runFuzzer(self):
-		cmd = self.sqlite_path + ' -header -csv '+ self.db +' < '+ self.input_file +' > ' + self.output_file
+	async def runFuzzer(self, runId):
+		currentDir = os.path.dirname(os.path.realpath(__file__))
+		self.log_file = os.path.join(self.runDir, 'log_')
+
+		cmd = currentDir + self.sqlite_path + ' -header -csv '+ self.db +' < '+ self.metadata.output_dir +' > ' +self.log_file
 		proc = await asyncio.create_subprocess_shell(cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
 
 		stdout, stderr = await proc.communicate()
 
 		if stdout:
-			with open(self.output_dir+'out.txt', 'w') as out:
+			with open(self.log_file+'out.txt', 'w') as out:
 				out.write(stdout.decode())
 		if stderr:
-			with open(self.output_dir+'err.txt', 'w') as err:
+			with open(self.log_file+'err.txt', 'w') as err:
 				err.write(stderr.decode())
+
+	def name(self):
+		return 'sqlite'
 
 
 def main():

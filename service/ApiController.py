@@ -5,13 +5,14 @@ from flask_swagger_ui import get_swaggerui_blueprint
 from service import apiService, manager
 from service.plugins import PLUGINS
 from service.plugins.PluginsManager import PluginsMgr
+from setup import FLASK_SERVER_NAME
 from .utils import JSON_MIME_TYPE, json_response
 
 app = Flask(__name__, static_url_path='/static')
 log = logging.getLogger(__name__)
 
 SWAGGER_URL = '/fuzz/api/docs'  # URL for exposing Swagger UI (without trailing '/')
-API_URL = 'http://localhost:8888/fuzz/swagger'  # Our API url (can of course be a local resource)
+API_URL = 'http://'+FLASK_SERVER_NAME+'/fuzz/swagger'  # Our API url (can of course be a local resource)
 
 
 def initController():
@@ -86,10 +87,10 @@ def plugin_status(name):
     return content, 200, {'Content-Type': JSON_MIME_TYPE}
 
 
-@app.route('/fuzz/plugin/<string:role>', methods=['POST'], endpoint='do')
-def do(role):
+@app.route('/fuzz/plugin/<string:role>/do/<string:command>', methods=['POST'], endpoint='do')
+def do(role, command):
     # todo - execute command
-    if role is None:
+    if role is None or command is None:
         abort(404)
 
     if request.content_type != JSON_MIME_TYPE:

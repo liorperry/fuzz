@@ -27,7 +27,7 @@ class Generator(BaseGenerator):
 		if numOfCols == 0:
 			return ''
 		vals = self.randPkg.randTableValues(numOfCols)
-		return line.replace('$table_name', tableN).replace('$params', params).replace('$values', vals)		
+		return line.replace('$table_name', tableN).replace('$params', params).replace('$values', vals)
 
 	def update(self, line):
 		tableN = self.randPkg.getTable()
@@ -51,8 +51,9 @@ class Generator(BaseGenerator):
 		return line.replace('$table_name', tableN)
 
 
-	def generate(self):
-		with open(os.path.join(self.template_dir,"sqlite_template.json"), "r") as read_file:
+	def generate(self, runId):
+		currentDir = os.path.dirname(os.path.realpath(__file__))
+		with open(os.path.join(currentDir ,"sqlite_template.json"), "r") as read_file:
 			json_data = json.load(read_file)
 
 		write_file = ''
@@ -60,17 +61,21 @@ class Generator(BaseGenerator):
 		rand_num = self.randPkg.getRandNum(1,self.max_file_lines)
 		for i in range(rand_num):
 			func = self.randPkg.getRandFromList(keys)
-			if (func != 'create' and not bool(self.randPkg.map)): 
+			if (func != 'create' and not bool(self.randPkg.map)):
 				continue
 			data = json_data[func]
 			try:
 				method = getattr(self, func)
 			except AttributeError:
 				print('no method: ', func)
-				continue;
+				continue
 			write_file += method(data) +'\n'
 		print(write_file)
-		with open(self.output_dir+'sqlite_cmd.sql', 'w') as sql_file:
+
+		currentDir = os.path.dirname(os.path.realpath(__file__))
+		runDir = os.path.join(currentDir + '/' + self.output_dir + '/' + runId)
+		self.metadata.output_dir = os.path.join(runDir, 'sqlite_cmd.sql')
+		with open(os.path.join(runDir, 'sqlite_cmd.sql'), 'w') as sql_file:
 			sql_file.write(write_file)
 		sql_file.close()
 		read_file.close()

@@ -1,4 +1,6 @@
 import asyncio
+import os
+import uuid
 from abc import abstractmethod
 
 from model.Status import Status
@@ -7,9 +9,11 @@ from service.LifeCycleApi import LifeCycleApi
 
 class baseDriver(LifeCycleApi):
 
-    def __init__(self, args, generator):
+    def __init__(self, args, generator, metadata):
+        self.metadata = metadata
         self.generator = generator
         self.init(args)
+        self.output_dir = args['output_dir']
 
     def run(self, name):
         self.start()
@@ -31,16 +35,31 @@ class baseDriver(LifeCycleApi):
     def init(self, args):
         pass
 
-    def runGenerator(self):
-        self.generator.generate()
+    def runGenerator(self, runId):
+        self.generator.generate(runId)
 
     @abstractmethod
-    async def runFuzzer(self):
+    async def runFuzzer(self, runId):
+        pass
+
+    @abstractmethod
+    def name(self):
         pass
 
     def start(self):
+        runId = uuid.uuid4().hex
         # run generator to create input files
-        self.runGenerator()
+        self.execute(runId)
+
+    def execute(self, runId):
+        self.currentDir = os.path.dirname(os.path.realpath(__file__))
+        self.runDir = os.path.join(self.currentDir +'/'+self.metadata.name+'/'+ self.output_dir + '/' + runId)
+        if not os.path.exists(self.runDir):
+            os.makedirs(self.runDir)
+
+        # run generator to create input files
+        self.runGenerator(runId)
         # run fuzzer based on the generated input files
         asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
-        asyncio.run(self.runFuzzer())
+        asyncio.run(self.runFuzzer(runId))
+
