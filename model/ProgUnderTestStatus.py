@@ -1,5 +1,3 @@
-import json
-
 from model.Status import Status
 
 
@@ -10,15 +8,30 @@ class ProgUnderTestStatus:
         self._details = details
         self._instancesRunning: int = 0
         self._instancesCompleted: int = 0
+        self._instancesErrors: int = 0
+
+    def set_status(self, status):
+        self._status = status
+        return self
+
+    def set_running(self, running):
+        self._instancesRunning = running
+        return self
+
+    def incrementCompleted(self):
+        self._instancesCompleted += 1
+        self._instancesRunning -= 1
+        return self
+
+    def incrementErrors(self):
+        self._instancesErrors += 1
+        self._instancesRunning -= 1
+        return self
 
     def name(self):
         return self._name
 
     def status(self):
-        return self._status
-
-    def set_status(self, status):
-        self._status = status
         return self._status
 
     def details(self):
@@ -30,11 +43,15 @@ class ProgUnderTestStatus:
     def running(self):
         return self._instancesRunning
 
+    def errors(self):
+        return self._instancesErrors
+
     def completed(self):
         return self._instancesCompleted
 
     def toJSON(self):
         return {'status': self._status, 'name': self._name,
-                           'running': self._instancesRunning,
-                           'completed': self._instancesCompleted,
-                           'details': self._details}
+                'running': self._instancesRunning,
+                'completed': self._instancesCompleted,
+                'error': self._instancesErrors,
+                'details': self._details}

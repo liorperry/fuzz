@@ -6,7 +6,7 @@ from flask_swagger_ui import get_swaggerui_blueprint
 from model.Command import Command
 from service import apiService, pluginMgr, statusMgr
 from setup import FLASK_SERVER_NAME
-from .utils import JSON_MIME_TYPE, json_response
+from .utils import JSON_MIME_TYPE, json_response, MyEncoder
 
 app = Flask(__name__, static_url_path='/static')
 log = logging.getLogger(__name__)
@@ -79,7 +79,7 @@ def plugin_status(name):
     if name is None:
         abort(404)
 
-    content = json.dumps(statusMgr.status(name))
+    content = json.dumps(statusMgr.status(name), cls=MyEncoder)
     return content, 200, {'Content-Type': JSON_MIME_TYPE}
 
 
@@ -89,14 +89,14 @@ def doGet(role, command):
     if role is None or command is None:
         abort(404)
 
-    commandEnity = Command(role, command,None,2,10)
+    # concurrency:int, timeout:int , role:str, data:{}
+    commandEntity = Command(role, command,None,5,10)
 
     # run command
-    result = apiService.run(commandEnity)
+    result = apiService.run(commandEntity)
     # Execute the function
-    content = json.dumps(result)
+    content = json.dumps(result,cls=MyEncoder)
     return content, 200, {'Content-Type': JSON_MIME_TYPE}
-
 
 @app.route('/fuzz/plugin/<string:role>/do/<string:command>', methods=['POST'], endpoint='doPost')
 def doPost(role, command):
@@ -110,11 +110,12 @@ def doPost(role, command):
 
     data = request.json
     # concurrency:int, timeout:int , role:str, data:{}
-    commandEnity = Command(role, command, data, data.get('concurrency'),data.get('timeout'))
+    commandEntity = Command(role, command, data, data.get('concurrency'),data.get('timeout'))
+
     # run command
-    result = apiService.run(commandEnity)
+    result = apiService.run(commandEntity)
     # Execute the function
-    content = json.dumps(result)
+    content = json.dumps(result, cls=MyEncoder)
     return content, 200, {'Content-Type': JSON_MIME_TYPE}
 
 

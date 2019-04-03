@@ -12,9 +12,12 @@ class BaseGenerator(metaclass=ABCMeta):
         self.randPkg = Randomize()
 
     @abstractmethod
-    def generate(self, runId, command):
+    def generate(self, runId, command, completeHook):
         pass
 
     @abstractmethod
     def init_parse(self):
+        pass
+
+    def completeHook(self, role, status):
         pass

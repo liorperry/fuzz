@@ -3,6 +3,7 @@ import json
 import os
 import sys
 
+from model.Status import Status
 from service.plugins.BaseGenerator import BaseGenerator
 
 
@@ -52,7 +53,7 @@ class Generator(BaseGenerator):
 		return line.replace('$table_name', tableN)
 
 
-	def generate(self, runId, command):
+	def generate(self, runId, command, completeHook):
 		currentDir = os.path.dirname(os.path.realpath(__file__))
 		with open(os.path.join(currentDir ,"sqlite_template.json"), "r") as read_file:
 			json_data = json.load(read_file)
@@ -80,6 +81,8 @@ class Generator(BaseGenerator):
 			sql_file.write(write_file)
 		sql_file.close()
 		read_file.close()
+		# finished callback
+		completeHook('sqlite',Status.PASSED)
 
 
 if __name__== "__main__":

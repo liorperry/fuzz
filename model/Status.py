@@ -4,3 +4,4 @@ class Status:
     RUNNING = 'RUNNING'
     STOPPED = 'STOPPED'
     PASSED = 'PASSED'
+    ERROR = 'ERROR'
