@@ -4,33 +4,37 @@ from model.Status import Status
 
 
 class ProgUnderTestStatus:
-    def __init__(self, details):
-        self.status = Status.NOT_INITIATED
-        self.details = details
-        self.instancesRunning: int = 0
-        self.instancesCompleted: int = 0
+    def __init__(self, name, details):
+        self._name = name
+        self._status = Status.INITIATED
+        self._details = details
+        self._instancesRunning: int = 0
+        self._instancesCompleted: int = 0
 
-    def id(self):
-        return self.id
+    def name(self):
+        return self._name
 
     def status(self):
-        return self.status
+        return self._status
 
     def set_status(self, status):
-        self.status = status
-        return self.status
+        self._status = status
+        return self._status
 
     def details(self):
-        return self.details
+        return self._details
 
     def instances(self):
         return self.instances
 
     def running(self):
-        return self.instancesRunning
+        return self._instancesRunning
 
     def completed(self):
-        return self.instancesCompleted
+        return self._instancesCompleted
 
     def toJSON(self):
-        return json.dumps({'status': self.status, 'id': self.id, 'command': self.command})
+        return {'status': self._status, 'name': self._name,
+                           'running': self._instancesRunning,
+                           'completed': self._instancesCompleted,
+                           'details': self._details}

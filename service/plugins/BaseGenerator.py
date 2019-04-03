@@ -12,7 +12,7 @@ class BaseGenerator(metaclass=ABCMeta):
         self.randPkg = Randomize()
 
     @abstractmethod
-    def generate(self, runId):
+    def generate(self, runId, command):
         pass
 
     @abstractmethod

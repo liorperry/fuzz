@@ -1,11 +1,19 @@
 from abc import ABCMeta, abstractmethod
 
+from model.ProgUnderTestStatus import ProgUnderTestStatus
+
 
 class BasePluginMetadata(metaclass=ABCMeta):
 
+    def __init__(self, managerStatus) -> None:
+        self._init(managerStatus)
+        # add progUnderTest status indication
+        self._managerStatus.add(ProgUnderTestStatus(self.name(), self.args()))
 
-    def __init__(self) -> None:
-        super().__init__()
+
+    @abstractmethod
+    def args(self):
+        pass
 
     @abstractmethod
     def name(self):
@@ -37,4 +45,8 @@ class BasePluginMetadata(metaclass=ABCMeta):
 
     @abstractmethod
     def swagger(self):
+        pass
+
+    @abstractmethod
+    def _init(self, managerStatus):
         pass

@@ -4,8 +4,7 @@ import os
 from service import init
 from service.ApiController import initController, app
 from setup import FLASK_SERVER_NAME
-from setup import RESTPLUS_SWAGGER_UI_DOC_EXPANSION, RESTPLUS_VALIDATE, RESTPLUS_MASK_SWAGGER, \
-    RESTPLUS_ERROR_404_HELP, FLASK_DEBUG
+from setup import RESTPLUS_SWAGGER_UI_DOC_EXPANSION, RESTPLUS_VALIDATE, RESTPLUS_MASK_SWAGGER, RESTPLUS_ERROR_404_HELP, FLASK_DEBUG
 
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), 'logging.conf'))
 logging.config.fileConfig(logging_conf_path)

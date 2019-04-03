@@ -1,16 +1,16 @@
 from model.ManagerStatus import MyManagerStatus
-from model.ProgUnderTestStatus import ProgUnderTestStatus
-
+from service.RepeatedTimer import RepeatedTimer
 from service.plugins import PLUGINS
 from service.plugins.PluginsManager import PluginsMgr
 
 statusMgr = MyManagerStatus()
-pluginMgr = PluginsMgr()
+pluginMgr = PluginsMgr(statusMgr)
 
 from service.ApiService import ExternalApiService
 apiService = ExternalApiService()
 
 
 def init():
-    for module in pluginMgr.modules():
-        statusMgr.add(ProgUnderTestStatus(vars(module)))
+    # start status updated
+    rt = RepeatedTimer(5, statusMgr.updateStatus)  # it auto-starts, no need of rt.start()
+    rt.start()

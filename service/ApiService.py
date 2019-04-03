@@ -9,20 +9,20 @@ class ExternalApiService(LifeCycleApi):
 
     def run(self, command):
         statuses = dict()
-        name: str = command.role
+        name: str = command.getRole()
         if name == 'all':
             for key, value in pluginMgr.modules().items():
-                statuses[key] = value.driver.run(name)
+                statuses[key] = value.driver.run(command)
         else:
             module = pluginMgr.plugin(name)
-            statuses[name] = module.driver().run(name)
+            statuses[name] = module.driver().run(command)
 
         return statuses
 
     # pause all
     def pause(self, command):
         statuses = dict()
-        name: str = command.role
+        name: str = command.getRole()
         if name == 'all':
             for key, value in pluginMgr.modules().items():
                 statuses[key] = value.driver.pause(name)
@@ -35,7 +35,7 @@ class ExternalApiService(LifeCycleApi):
     # restart all
     def restart(self, command):
         statuses = dict()
-        name: str = command.role
+        name: str = command.getRole()
         if name == 'all':
             for key, value in pluginMgr.modules().items():
                 statuses[key] = value.driver.restart(name)
@@ -48,7 +48,7 @@ class ExternalApiService(LifeCycleApi):
     # stop all
     def stop(self, command):
         statuses = dict()
-        name: str = command.role
+        name: str = command.getRole()
         if name == 'all':
             for key, value in pluginMgr.modules().items():
                 statuses[key] = value.driver.stop(name)

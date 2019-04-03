@@ -1,22 +1,24 @@
 import json
 import uuid
 
-from model import ProgUnderTestStatus
 from model.Status import Status
 
 
 # Status manager for the entire client
+from service.utils import MyEncoder
+
+
 class MyManagerStatus:
     def __init__(self):
-        self.clientStatus = Status.NOT_INITIATED
+        self.clientStatus = Status.INITIATED
         self.id = uuid.uuid4().hex
         self.progs = dict()
 
     def toJSON(self):
-        return json.dumps({'status': self.clientStatus, 'id': self.id})
+        return json.dumps({'status': self.clientStatus, 'id': self.id, 'progs': self.progs}, cls=MyEncoder)
 
-    def add(self, prog: ProgUnderTestStatus):
-        self.progs[prog.id()] = prog
+    def add(self, prog):
+        self.progs[prog.name()] = prog
 
     def progs(self):
         return self.progs
@@ -27,4 +29,6 @@ class MyManagerStatus:
     def status(self, name):
         return self.progs[name]
 
-
+    def updateStatus(self):
+        # print("... scanning ...")
+        return

@@ -2,24 +2,47 @@ import json
 
 
 class Command:
-    def __init__(self, role=None, concurrency=10, timeout=60*3) -> None:
+    def __init__(self, role, command, details = None, concurrency: int=10, timeout: int=60*3, ) -> None:
         super().__init__()
-        self.role = role
-        self.concurrency = concurrency
-        self.timeout = timeout
+        self._role = role
+        self._command = command
+        self._concurrency = concurrency
+        self._timeout = timeout
+        self._details = details
 
     def role(self, role):
-        self.role = role
+        self._role = role
+
+    def getRole(self):
+        return self._role
 
     def concurrency(self, concurrency):
-        self.concurrency = concurrency
+        self._concurrency = concurrency
+
+    def getConcurrency(self):
+        return self._concurrency
+
+    def command(self, command):
+        self._command = command
+
+    def getCommand(self):
+        return self._command
 
     def timeout(self, timeout):
-        self.timeout = timeout
+        self._timeout = timeout
+
+    def getTimeout(self):
+        return self._timeout
+
+    def details(self, details):
+        self._details = details
+
+    def getDetails(self):
+        return self._details
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__,sort_keys=True, indent=4)
 
     # f = JSONDecoder(object_hook = fromJson).decode('{"role": "myRole", "concurrency" : "100", "timeout": 10000 }')
     def fromJson(json_object):
-        return Command(json_object['role'], json_object['concurrency'], json_object['timeout'])
+        return Command(json_object['role'],json_object['command'], json_object['concurrency'], json_object['timeout'], json_object['details'])

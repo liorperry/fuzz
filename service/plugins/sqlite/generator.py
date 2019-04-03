@@ -52,7 +52,7 @@ class Generator(BaseGenerator):
 		return line.replace('$table_name', tableN)
 
 
-	def generate(self, runId):
+	def generate(self, runId, command):
 		currentDir = os.path.dirname(os.path.realpath(__file__))
 		with open(os.path.join(currentDir ,"sqlite_template.json"), "r") as read_file:
 			json_data = json.load(read_file)

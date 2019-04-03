@@ -5,27 +5,34 @@ from service.plugins.BasePluginMetadata import BasePluginMetadata
 from service.plugins.sqlite.driver import Driver
 from service.plugins.sqlite.generator import Generator
 
-class sqlitePluginMetadata(BasePluginMetadata):
-    def __init__(self) -> None:
-        super().__init__()
-        self.name = 'sqlite'
-        # -i sqlite_cmd.sql - o data.csv --target-path =..\sqlite327\sqlite3.exe
-        args = dict()
-        args['output_file'] = 'sqlite_cmd.sql'
-        args['input_file'] = 'data.csv'
-        args['log_file'] = 'log_'
-        args['sqlite_path'] = '/lib/sqlite3.exe'
-        args['output_dir'] = '/target'
-        args['template_dir'] = os.getcwd()
 
-        self.generator = Generator(args, self)
-        self.driver = Driver(args, self.generator, self)
+class sqlitePluginMetadata(BasePluginMetadata):
+
+    def _init(self, managerStatus):
+        self._name = 'sqlite'
+        # -i sqlite_cmd.sql - o data.csv --target-path =..\sqlite327\sqlite3.exe
+        self._args = dict()
+        self._args['output_file'] = 'sqlite_cmd.sql'
+        self._args['input_file'] = 'data.csv'
+        self._args['log_file'] = 'log_'
+        self._args['sqlite_path'] = '/lib/sqlite3.exe'
+        self._args['output_dir'] = '/target'
+        self._args['template_dir'] = os.getcwd()
+
+        self._managerStatus = managerStatus
+        self._generator = Generator(self._args, self)
+        # init sqlite driver
+        self._driver = Driver(self._args, self._generator, self, managerStatus)
+
+
+    def args(self):
+        return self._args
 
     def name(self):
-        return self.name
+        return self._name
 
     def generator(self):
-        return Generator()
+        return self._generator
 
     def logAnalyzer(self):
         return 'logAnalyzer.class.name'
@@ -44,9 +51,9 @@ class sqlitePluginMetadata(BasePluginMetadata):
 
     def toJson(self):
         return {
-            'name': self.name,
+            'name': self._name,
             'swagger': self.swagger
         }
 
     def driver(self):
-        return self.driver
+        return self._driver

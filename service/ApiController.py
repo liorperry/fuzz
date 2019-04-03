@@ -2,8 +2,9 @@ import json
 
 from flask import abort, Flask, logging, send_from_directory, request
 from flask_swagger_ui import get_swaggerui_blueprint
+
+from model.Command import Command
 from service import apiService, pluginMgr, statusMgr
-from service.plugins import PLUGINS
 from setup import FLASK_SERVER_NAME
 from .utils import JSON_MIME_TYPE, json_response
 
@@ -11,7 +12,7 @@ app = Flask(__name__, static_url_path='/static')
 log = logging.getLogger(__name__)
 
 SWAGGER_URL = '/fuzz/api/docs'  # URL for exposing Swagger UI (without trailing '/')
-API_URL = 'http://'+FLASK_SERVER_NAME+'/fuzz/swagger'  # Our API url (can of course be a local resource)
+API_URL = 'http://' + FLASK_SERVER_NAME + '/fuzz/swagger'  # Our API url (can of course be a local resource)
 
 
 def initController():
@@ -36,11 +37,13 @@ def initController():
     # (URL must match the one given to factory function above)
     app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
+
 # **********************************************************************************************************************
 
 @app.errorhandler(404)
 def not_found(e):
     return '', 404
+
 
 # **********************************************************************************************************************
 @app.route('/fuzz/swagger', endpoint='swagger')
@@ -48,32 +51,26 @@ def swagger():
     return send_from_directory('../static', 'swagger.json')
 
 
-@app.route('/fuzz/swagger/<string:name>', endpoint='plugin')
-def plugin(name):
+@app.route('/fuzz/swagger/<string:name>', endpoint='swagger_plugin')
+def swagger_plugin(name):
     if name is None:
         abort(404)
 
     swagger = pluginMgr.plugin(name).swagger()
-    return send_from_directory('../service/plugins/' + name +'/static' , swagger)
+    return send_from_directory('../service/plugins/' + name + '/static', swagger)
 
 
 # **********************************************************************************************************************
 
 @app.route('/fuzz/status')
 def status():
-    content = json.dumps({
-        'id': 33,
-        'status': 'my status',
-        'manager id': 1,
-        'running targets': 10,
-    })
-    return content, 200, {'Content-Type': JSON_MIME_TYPE}
+    return statusMgr.toJSON()
 
 
 # **********************************************************************************************************************
 @app.route('/fuzz/plugins', endpoint='plugins')
 def plugins():
-    content =pluginMgr.modules()
+    content = pluginMgr.modules()
     return json.dumps(content), 200, {'Content-Type': JSON_MIME_TYPE}
 
 
@@ -86,8 +83,23 @@ def plugin_status(name):
     return content, 200, {'Content-Type': JSON_MIME_TYPE}
 
 
-@app.route('/fuzz/plugin/<string:role>/do/<string:command>', methods=['POST'], endpoint='do')
-def do(role, command):
+@app.route('/fuzz/plugin/<string:role>/do/<string:command>', methods=['GET'], endpoint='doGet')
+def doGet(role, command):
+    # execute command
+    if role is None or command is None:
+        abort(404)
+
+    commandEnity = Command(role, command,None,2,10)
+
+    # run command
+    result = apiService.run(commandEnity)
+    # Execute the function
+    content = json.dumps(result)
+    return content, 200, {'Content-Type': JSON_MIME_TYPE}
+
+
+@app.route('/fuzz/plugin/<string:role>/do/<string:command>', methods=['POST'], endpoint='doPost')
+def doPost(role, command):
     # execute command
     if role is None or command is None:
         abort(404)
@@ -97,22 +109,14 @@ def do(role, command):
         return json_response(error, 400)
 
     data = request.json
-    if not all([data.get('role'), data.get('cmd'), data.get('details')]):
-        error = json.dumps({'error': 'Missing field/s (role, cmd, details)'})
-        return json_response(error, 400)
-
-    switcher = {
-        "run": apiService.run,
-        "pause": apiService.pause,
-        "restart": apiService.restart,
-        "stop": apiService.stop
-    }
-
-    func = switcher.get(apiService.run(data), lambda: "Invalid command")
+    # concurrency:int, timeout:int , role:str, data:{}
+    commandEnity = Command(role, command, data, data.get('concurrency'),data.get('timeout'))
+    # run command
+    result = apiService.run(commandEnity)
     # Execute the function
-    result = func()
-    content = json.dumps(result.toJSON())
+    content = json.dumps(result)
     return content, 200, {'Content-Type': JSON_MIME_TYPE}
+
 
 # **********************************************************************************************************************
 
@@ -133,5 +137,3 @@ def doAll(command):
     result = func()
     content = json.dumps(result)
     return content, 200, {'Content-Type': JSON_MIME_TYPE}
-
-
