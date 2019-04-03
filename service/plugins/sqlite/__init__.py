@@ -44,9 +44,8 @@ class sqlitePluginMetadata(BasePluginMetadata):
 
     def toJson(self):
         return {
-            'name': self.name(),
-            'cmd': self.command(),
-            'swagger': self.swagger()
+            'name': self.name,
+            'swagger': self.swagger
         }
 
     def driver(self):

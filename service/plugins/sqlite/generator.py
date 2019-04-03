@@ -10,6 +10,7 @@ class Generator(BaseGenerator):
 	def init_parse(self, args):
 		self.output_dir = args['output_dir']
 		self.template_dir = args['template_dir']
+		self.max_file_lines = 50
 
 	def create(self, line):
 		tableN = self.randPkg.setNewTable()

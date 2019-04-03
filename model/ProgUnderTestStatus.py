@@ -7,7 +7,8 @@ class ProgUnderTestStatus:
     def __init__(self, details):
         self.status = Status.NOT_INITIATED
         self.details = details
-        self.instances = dict()
+        self.instancesRunning: int = 0
+        self.instancesCompleted: int = 0
 
     def id(self):
         return self.id
@@ -25,7 +26,11 @@ class ProgUnderTestStatus:
     def instances(self):
         return self.instances
 
+    def running(self):
+        return self.instancesRunning
+
+    def completed(self):
+        return self.instancesCompleted
+
     def toJSON(self):
         return json.dumps({'status': self.status, 'id': self.id, 'command': self.command})
-
-

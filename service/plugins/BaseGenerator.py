@@ -10,7 +10,6 @@ class BaseGenerator(metaclass=ABCMeta):
         self.output_dir = ''
         self.init_parse(args)
         self.randPkg = Randomize()
-        self.max_file_lines = 50
 
     @abstractmethod
     def generate(self, runId):

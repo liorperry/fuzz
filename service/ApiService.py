@@ -1,4 +1,4 @@
-from service import modules
+from service import pluginMgr
 from service.LifeCycleApi import LifeCycleApi
 
 
@@ -7,49 +7,53 @@ class ExternalApiService(LifeCycleApi):
     def __init__(self):
         super().__init__()
 
-    def run(self, name: str = 'all'):
+    def run(self, command):
         statuses = dict()
+        name: str = command.role
         if name == 'all':
-            for key, value in modules.items():
+            for key, value in pluginMgr.modules().items():
                 statuses[key] = value.driver.run(name)
         else:
-            module = modules[name]
+            module = pluginMgr.plugin(name)
             statuses[name] = module.driver().run(name)
 
         return statuses
 
     # pause all
-    def pause(self, name: str = 'all'):
+    def pause(self, command):
         statuses = dict()
+        name: str = command.role
         if name == 'all':
-            for key, value in modules.items():
-                statuses[key] = value.driver().pause(name)
+            for key, value in pluginMgr.modules().items():
+                statuses[key] = value.driver.pause(name)
         else:
-            module = modules[name]
+            module = pluginMgr.plugin(name)
             statuses[name] = module.driver().pause(name)
 
         return statuses
 
     # restart all
-    def restart(self, name: str = 'all'):
+    def restart(self, command):
         statuses = dict()
+        name: str = command.role
         if name == 'all':
-            for key, value in modules.items():
-                statuses[key] = value.driver().restart(name)
+            for key, value in pluginMgr.modules().items():
+                statuses[key] = value.driver.restart(name)
         else:
-            module = modules[name]
+            module = pluginMgr.plugin(name)
             statuses[name] = module.driver().restart(name)
 
         return statuses
 
     # stop all
-    def stop(self, name: str = 'all'):
+    def stop(self, command):
         statuses = dict()
+        name: str = command.role
         if name == 'all':
-            for key, value in modules.items():
-                statuses[key] = value.driver().stop(name)
+            for key, value in pluginMgr.modules().items():
+                statuses[key] = value.driver.stop(name)
         else:
-            module = modules[name]
+            module = pluginMgr.plugin(name)
             statuses[name] = module.driver().stop(name)
 
         return statuses

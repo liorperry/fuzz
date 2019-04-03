@@ -46,7 +46,7 @@ class baseDriver(LifeCycleApi):
     def name(self):
         pass
 
-    def start(self):
+    def start(self, command):
         runId = uuid.uuid4().hex
         # run generator to create input files
         self.execute(runId)

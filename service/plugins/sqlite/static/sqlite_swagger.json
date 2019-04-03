@@ -37,18 +37,24 @@
       }
     },
     "/do/{command}": {
-      "post": {
+      "get": {
         "tags": [
-          "Fuzzer execute command "
+          "Fuzzer sqlite command "
         ],
-        "summary": "Execute fuzzer given command",
+        "summary": "Execute sqlite given command",
         "parameters": [
           {
-            "name": "name",
+            "name": "command",
             "in": "path",
-            "description": "plugin name",
+            "description": "sqlite command",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "run",
+              "stop",
+              "pause",
+              "restart"
+            ]
           }
         ],
         "description": "Execute fuzzer given command",
@@ -64,14 +70,18 @@
     }
   },
   "definitions": {
-    "Something": {
+    "Command": {
       "type": "object",
       "properties": {
-        "id": {
+        "concurrency": {
           "type": "integer",
           "format": "int32"
         },
-        "name": {
+        "timeout": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "role": {
           "type": "string"
         },
         "data": {
@@ -79,9 +89,12 @@
         }
       },
       "example": {
-        "id": "1",
-        "name": "what",
-        "data": "value"
+        "role": "sqlite",
+        "concurrency": 5,
+        "timeout": 18000000,
+        "data": {
+          "params": "-po=4"
+        }
       }
     }
   }

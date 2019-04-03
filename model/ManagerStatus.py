@@ -5,14 +5,15 @@ from model import ProgUnderTestStatus
 from model.Status import Status
 
 
+# Status manager for the entire client
 class MyManagerStatus:
     def __init__(self):
-        self.status = Status.NOT_INITIATED
+        self.clientStatus = Status.NOT_INITIATED
         self.id = uuid.uuid4().hex
         self.progs = dict()
 
     def toJSON(self):
-        return json.dumps({'status': self.status, 'id': self.id})
+        return json.dumps({'status': self.clientStatus, 'id': self.id})
 
     def add(self, prog: ProgUnderTestStatus):
         self.progs[prog.id()] = prog
@@ -25,8 +26,5 @@ class MyManagerStatus:
 
     def status(self, name):
         return self.progs[name]
-
-    def progStatus(self, id):
-        return self.progs[id]
 
 

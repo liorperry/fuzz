@@ -4,17 +4,17 @@ import abc
 
 class LifeCycleApi(abc.ABC):
     @abc.abstractmethod
-    def run(self, name):
+    def run(self, command):
         pass
 
     @abc.abstractmethod
-    def pause(self, name):
+    def pause(self, command):
         pass
 
     @abc.abstractmethod
-    def restart(self, name):
+    def restart(self, command):
         pass
 
     @abc.abstractmethod
-    def stop(self, name):
+    def stop(self, command):
         pass

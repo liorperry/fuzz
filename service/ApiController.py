@@ -2,9 +2,8 @@ import json
 
 from flask import abort, Flask, logging, send_from_directory, request
 from flask_swagger_ui import get_swaggerui_blueprint
-from service import apiService, manager
+from service import apiService, pluginMgr, statusMgr
 from service.plugins import PLUGINS
-from service.plugins.PluginsManager import PluginsMgr
 from setup import FLASK_SERVER_NAME
 from .utils import JSON_MIME_TYPE, json_response
 
@@ -54,7 +53,7 @@ def plugin(name):
     if name is None:
         abort(404)
 
-    swagger = PluginsMgr(PLUGINS).plugin(name).swagger()
+    swagger = pluginMgr.plugin(name).swagger()
     return send_from_directory('../service/plugins/' + name +'/static' , swagger)
 
 
@@ -74,7 +73,7 @@ def status():
 # **********************************************************************************************************************
 @app.route('/fuzz/plugins', endpoint='plugins')
 def plugins():
-    content = PluginsMgr(PLUGINS).plugins()
+    content =pluginMgr.modules()
     return json.dumps(content), 200, {'Content-Type': JSON_MIME_TYPE}
 
 
@@ -83,13 +82,13 @@ def plugin_status(name):
     if name is None:
         abort(404)
 
-    content = json.dumps(manager.status(name))
+    content = json.dumps(statusMgr.status(name))
     return content, 200, {'Content-Type': JSON_MIME_TYPE}
 
 
 @app.route('/fuzz/plugin/<string:role>/do/<string:command>', methods=['POST'], endpoint='do')
 def do(role, command):
-    # todo - execute command
+    # execute command
     if role is None or command is None:
         abort(404)
 
