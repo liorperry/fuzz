@@ -70,7 +70,7 @@ def status():
 # **********************************************************************************************************************
 @app.route('/fuzz/plugins', endpoint='plugins')
 def plugins():
-    content = pluginMgr.modules()
+    content = pluginMgr.moduleNames()
     return json.dumps(content), 200, {'Content-Type': JSON_MIME_TYPE}
 
 

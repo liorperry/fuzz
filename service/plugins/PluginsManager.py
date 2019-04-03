@@ -38,6 +38,9 @@ class PluginsMgr:
     def modules(self):
         return list(self.plugins.values())
 
+    def moduleNames(self):
+        return list(self.plugins.keys())
+
     # get plugins list
     def plugin(self, name):
         return self.plugins[name]
