@@ -65,7 +65,7 @@ class baseDriver(LifeCycleApi):
         concurrency = command.getConcurrency()
         for i in range(0, concurrency):
             runId = uuid.uuid4().hex
-            print('submit {} for role {}'.format(i, command.getRole()))
+            # print('submit {} for role {}'.format(i, command.getRole()))
             self.executor.submit(self.execute, runId, command, self.completeHook)
             # delay between executions
             time.sleep(DELAY)

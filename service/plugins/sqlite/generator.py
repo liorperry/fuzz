@@ -72,7 +72,6 @@ class Generator(BaseGenerator):
 				print('no method: ', func)
 				continue
 			write_file += method(data) +'\n'
-		print(write_file)
 
 		currentDir = os.path.dirname(os.path.realpath(__file__))
 		runDir = os.path.join(currentDir + '/' + self.output_dir + '/' + runId)
