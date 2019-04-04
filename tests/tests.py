@@ -8,35 +8,18 @@ class StepApiControllerTestCase(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
 
-    def test_fuzz_run_command(self):
-        # /fuzz/do/<string:command>
-        resp = self.app.get('/fuzz/do/run')
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.content_type, 'application/json')
+    # run sqlite fuzzing
+    def test_fuzz_sqlite_run_command(self):
+        pass
 
-        content = json.loads(resp.get_data(as_text=True))
-        self.assertEqual(len(content), 1)
-        self.assertEqual(content, {'command': 'run'})
+    # run sqlite fuzzing and stop
+    def test_fuzz_sqlite_run_and_stop_command(self):
+        pass
 
-    def test_fuzz_pause_command(self):
-        # /fuzz/do/<string:command>
-        resp = self.app.get('/fuzz/do/pause')
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.content_type, 'application/json')
+    # run sqlite fuzzing & check status
+    def test_fuzz_sqlite_status_command(self):
+        pass
 
-        content = json.loads(resp.get_data(as_text=True))
-        self.assertEqual(len(content), 1)
-        self.assertEqual(content, {'command': 'pause'})
-
-    def test_fuzz_stop_command(self):
-        # /fuzz/do/<string:command>
-        resp = self.app.get('/fuzz/do/stop')
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.content_type, 'application/json')
-
-        content = json.loads(resp.get_data(as_text=True))
-        self.assertEqual(len(content), 1)
-        self.assertEqual(content, {'command': 'stop'})
 
     def test_book_detail_404(self):
         resp = self.app.get('/stam/1111')
