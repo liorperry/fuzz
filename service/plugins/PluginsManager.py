@@ -5,8 +5,9 @@ import os
 # plugins manager for the entire client
 class PluginsMgr:
     # scan plugins folder and list plugins
-    def __init__(self, managerStatus, workdir='') -> None:
+    def __init__(self, managerStatus, logService, workdir='') -> None:
         super().__init__()
+        self.logService = logService
         self.managerStatus = managerStatus
         self.currentDir = os.path.dirname(os.path.realpath(__file__))
         self.workdir = workdir
@@ -15,13 +16,13 @@ class PluginsMgr:
 
     # get plugins list
     def _plugins(self):
-        return next(os.walk(os.path.join(self.currentDir,self.workdir)))[1]
+        return next(os.walk(os.path.join(self.currentDir, self.workdir)))[1]
 
     # instantiate single module
     def _module(self, plugin: str):
         module = importlib.import_module('service.plugins' + '.' + plugin)
         my_class = getattr(module, plugin + 'PluginMetadata')
-        return my_class(self.managerStatus)
+        return my_class(self.managerStatus, self.logService)
 
     # instantiate modules
     def _modules(self):

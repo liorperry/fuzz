@@ -50,8 +50,4 @@ class ProgUnderTestStatus:
         return self._instancesCompleted
 
     def toJSON(self):
-        return {'status': self._status, 'name': self._name,
-                'running': self._instancesRunning,
-                'completed': self._instancesCompleted,
-                'error': self._instancesErrors,
-                'details': self._details}
+        return self.__dict__

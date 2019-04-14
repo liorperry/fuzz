@@ -8,7 +8,7 @@ from service.plugins.crash.generator import Generator
 
 class crashPluginMetadata(BasePluginMetadata):
 
-    def _init(self, managerStatus):
+    def _init(self, managerStatus,logService):
         self._name = 'crash'
         self._args = dict()
         self._args['output_file'] = ''
@@ -20,8 +20,8 @@ class crashPluginMetadata(BasePluginMetadata):
         self._args['template_dir'] = os.getcwd()
 
         self._managerStatus = managerStatus
-        self._generator = Generator(self._args, self)
-        self._driver = Driver(self._args, self._generator, self, managerStatus)
+        self._generator = Generator(self._args, self, logService)
+        self._driver = Driver(self._args, self._generator, self, managerStatus, logService)
 
 
     def args(self):

@@ -8,7 +8,7 @@ from service.plugins.sqlite.generator import Generator
 
 class sqlitePluginMetadata(BasePluginMetadata):
 
-    def _init(self, managerStatus):
+    def _init(self, managerStatus, logService):
         self._name = 'sqlite'
         # -i sqlite_cmd.sql - o data.csv --target-path =..\sqlite327\sqlite3.exe
         self._args = dict()
@@ -20,9 +20,9 @@ class sqlitePluginMetadata(BasePluginMetadata):
         self._args['template_dir'] = os.getcwd()
 
         self._managerStatus = managerStatus
-        self._generator = Generator(self._args, self)
+        self._generator = Generator(self._args, self, logService)
         # init sqlite driver
-        self._driver = Driver(self._args, self._generator, self, managerStatus)
+        self._driver = Driver(self._args, self._generator, self, managerStatus, logService)
 
 
     def args(self):

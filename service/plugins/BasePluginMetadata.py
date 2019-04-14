@@ -5,8 +5,8 @@ from model.ProgUnderTestStatus import ProgUnderTestStatus
 
 class BasePluginMetadata(metaclass=ABCMeta):
 
-    def __init__(self, managerStatus) -> None:
-        self._init(managerStatus)
+    def __init__(self, managerStatus, logService) -> None:
+        self._init(managerStatus, logService)
         # add progUnderTest status indication
         self._managerStatus.add(ProgUnderTestStatus(self.name(), self.args()))
 
@@ -48,5 +48,5 @@ class BasePluginMetadata(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def _init(self, managerStatus):
+    def _init(self, managerStatus, logService):
         pass

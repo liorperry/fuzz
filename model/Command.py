@@ -41,7 +41,7 @@ class Command:
         return self._details
 
     def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__,sort_keys=True, indent=4)
+        return self.__dict__
 
     # f = JSONDecoder(object_hook = fromJson).decode('{"role": "myRole", "concurrency" : "100", "timeout": 10000 }')
     def fromJson(json_object):

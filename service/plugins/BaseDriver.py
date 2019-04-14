@@ -5,14 +5,17 @@ import uuid
 from abc import abstractmethod
 from concurrent.futures.thread import ThreadPoolExecutor
 
+from model.LogEvent import LogEvent
 from model.Status import Status
 from service.LifeCycleApi import LifeCycleApi
 from service.plugins import DELAY
+from service.utils import TimestampMillisec64
 
 
 class baseDriver(LifeCycleApi):
 
-    def __init__(self, args, generator, metadata, managerStatus):
+    def __init__(self, args, generator, metadata, managerStatus, logService):
+        self.logService = logService
         self.managerStatus = managerStatus
         self.metadata = metadata
         self.generator = generator
@@ -53,14 +56,22 @@ class baseDriver(LifeCycleApi):
     def name(self):
         pass
 
-    def completeHook(self, role, status):
+    def completeHook(self, role, status, **kwargs):
         progStatus = self.managerStatus.status(role)
         if status == Status.PASSED:
             progStatus.incrementCompleted()
         if status == Status.ERROR:
             progStatus.incrementErrors()
+        # status end of run
+        start_time = kwargs['time']
+        run_time = TimestampMillisec64() - start_time
+        runId = kwargs['run']
+        command = kwargs['command']
+        num_lines = kwargs['lines']
+        # log to service
+        self.logService.report(LogEvent(role, runId, command, num_lines, run_time))
 
-    def start(self, command ):
+    def start(self, command):
         # run generator to create input files
         concurrency = command.getConcurrency()
         for i in range(0, concurrency):

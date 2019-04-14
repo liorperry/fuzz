@@ -1,10 +1,12 @@
 from model.ManagerStatus import MyManagerStatus
+from service.LogService import LogService
 from service.RepeatedTimer import RepeatedTimer
 from service.plugins import PLUGINS
 from service.plugins.PluginsManager import PluginsMgr
 
 statusMgr = MyManagerStatus()
-pluginMgr = PluginsMgr(statusMgr)
+log_service = LogService()
+pluginMgr = PluginsMgr(statusMgr,log_service)
 
 from service.ApiService import ExternalApiService
 apiService = ExternalApiService()

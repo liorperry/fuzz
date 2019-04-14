@@ -2,7 +2,8 @@ from abc import ABCMeta, abstractmethod
 
 
 class BaseGenerator(metaclass=ABCMeta):
-    def __init__(self, args, metadata):
+    def __init__(self, args, metadata, logService):
+        self.logService = logService
         self.metadata = metadata
         self.output_dir = ''
         self.init_parse(args)
@@ -15,9 +16,5 @@ class BaseGenerator(metaclass=ABCMeta):
     def init_parse(self):
         pass
 
-    # todo status end of run
-    # #of lines
-    # crash / not
-    # execution time
-    def completeHook(self, role, status):
+    def completeHook(self, role, status, *args):
         pass
