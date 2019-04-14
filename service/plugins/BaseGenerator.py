@@ -1,7 +1,4 @@
-import getopt
 from abc import ABCMeta, abstractmethod
-
-from service.plugins.sqlite.randQuery import Randomize
 
 
 class BaseGenerator(metaclass=ABCMeta):
@@ -9,7 +6,6 @@ class BaseGenerator(metaclass=ABCMeta):
         self.metadata = metadata
         self.output_dir = ''
         self.init_parse(args)
-        self.randPkg = Randomize()
 
     @abstractmethod
     def generate(self, runId, command, completeHook):
@@ -19,5 +15,9 @@ class BaseGenerator(metaclass=ABCMeta):
     def init_parse(self):
         pass
 
+    # todo status end of run
+    # #of lines
+    # crash / not
+    # execution time
     def completeHook(self, role, status):
         pass

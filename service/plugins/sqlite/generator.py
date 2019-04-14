@@ -5,10 +5,12 @@ import sys
 
 from model.Status import Status
 from service.plugins.BaseGenerator import BaseGenerator
+from service.plugins.sqlite.randQuery import Randomize
 
 
 class Generator(BaseGenerator):
 	def init_parse(self, args):
+		self.randPkg = Randomize()
 		self.output_dir = args['output_dir']
 		self.template_dir = args['template_dir']
 		self.max_file_lines = 50

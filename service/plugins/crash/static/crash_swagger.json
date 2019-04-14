@@ -1,0 +1,101 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Crash Fuzzer client"
+  },
+  "basePath": "/fuzz/plugin/crash",
+  "tags": [
+    {
+      "name": "Crash Fuzzer ",
+      "description": "\n Crash Fuzzer plugin "
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/status": {
+      "get": {
+        "tags": [
+          "Get status"
+        ],
+        "description": "Gets status details",
+        "summary": "Gets status details",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Crash  Status details"
+          }
+        }
+      }
+    },
+    "/do/{command}": {
+      "get": {
+        "tags": [
+          "Fuzzer Crash command "
+        ],
+        "summary": "Execute Crash given command",
+        "parameters": [
+          {
+            "name": "command",
+            "in": "path",
+            "description": "Crash command",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "run",
+              "stop",
+              "pause",
+              "restart"
+            ]
+          }
+        ],
+        "description": "Execute fuzzer given command",
+        "responses": {
+          "200": {
+            "description": "Returns <code>200</code> Fuzzer command execution indication or <code>404</code>"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Command": {
+      "type": "object",
+      "properties": {
+        "concurrency": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "timeout": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "role": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "role": "crash",
+        "concurrency": 5,
+        "timeout": 18000000,
+        "data": {
+          "params": ""
+        }
+      }
+    }
+  }
+}
