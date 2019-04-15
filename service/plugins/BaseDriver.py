@@ -75,23 +75,24 @@ class baseDriver(LifeCycleApi):
         # run generator to create input files
         concurrency = command.getConcurrency()
         for i in range(0, concurrency):
-            runId = uuid.uuid4().hex
             # print('submit {} for role {}'.format(i, command.getRole()))
-            self.executor.submit(self.execute, runId, command, self.completeHook)
+            self.executor.submit(self.execute, command, self.completeHook)
             # delay between executions
             time.sleep(DELAY)
         return Status.RUNNING
 
     # run in concurrency
     # handle timeout
-    def execute(self, runId, command, completeHook):
-        self.currentDir = os.path.dirname(os.path.realpath(__file__))
-        self.runDir = os.path.join(self.currentDir + '/' + self.metadata.name() + '/' + self.output_dir + '/' + runId)
-        if not os.path.exists(self.runDir):
-            os.makedirs(self.runDir)
+    def execute(self, command, completeHook):
+        while self.managerStatus.prog(command.getRole()) != Status.STOPPED:
+            runId = uuid.uuid4().hex
+            self.currentDir = os.path.dirname(os.path.realpath(__file__))
+            self.runDir = os.path.join(self.currentDir + '/' + self.metadata.name() + '/' + self.output_dir + '/' + runId)
+            if not os.path.exists(self.runDir):
+                os.makedirs(self.runDir)
 
-        # run generator to create input files
-        self.runGenerator(runId, command, self.generator.completeHook)
-        # run fuzzer based on the generated input files
-        asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
-        asyncio.run(self.runFuzzer(runId, command, completeHook))
+            # run generator to create input files
+            self.runGenerator(runId, command, self.generator.completeHook)
+            # run fuzzer based on the generated input files
+            asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+            asyncio.run(self.runFuzzer(runId, command, completeHook))

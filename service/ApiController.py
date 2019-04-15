@@ -92,8 +92,16 @@ def doGet(role, command):
     # concurrency:int, timeout:int , role:str, data:{}
     commandEntity = Command(role, command,None,5,10)
 
-    # run command
-    result = apiService.run(commandEntity)
+    switcher = {
+        "run": apiService.run,
+        "pause": apiService.pause,
+        "restart": apiService.restart,
+        "stop": apiService.stop
+    }
+
+    func = switcher.get(command, lambda: "Invalid command")
+    # Execute the function
+    result = func(commandEntity)
     # Execute the function
     content = json.dumps(result,cls=MyEncoder)
     return content, 200, {'Content-Type': JSON_MIME_TYPE}
@@ -112,8 +120,17 @@ def doPost(role, command):
     # concurrency:int, timeout:int , role:str, data:{}
     commandEntity = Command(role, command, data, data.get('concurrency'),data.get('timeout'))
 
-    # run command
-    result = apiService.run(commandEntity)
+    switcher = {
+        "run": apiService.run,
+        "pause": apiService.pause,
+        "restart": apiService.restart,
+        "stop": apiService.stop
+    }
+
+    func = switcher.get(command, lambda: "Invalid command")
+
+    # Execute the function
+    result = func(commandEntity)
     # Execute the function
     content = json.dumps(result, cls=MyEncoder)
     return content, 200, {'Content-Type': JSON_MIME_TYPE}
@@ -133,8 +150,10 @@ def doAll(command):
         "stop": apiService.stop
     }
 
+    commandEntity = Command("all", command,None,5,10)
     func = switcher.get(command, lambda: "Invalid command")
+
     # Execute the function
-    result = func()
+    result = func(commandEntity)
     content = json.dumps(result)
     return content, 200, {'Content-Type': JSON_MIME_TYPE}

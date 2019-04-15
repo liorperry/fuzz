@@ -25,10 +25,10 @@ class ExternalApiService(LifeCycleApi):
         name: str = command.getRole()
         if name == 'all':
             for key, value in pluginMgr.modules().items():
-                statuses[key] = value.driver.pause(name)
+                statuses[key] = value.driver.pause(command)
         else:
             module = pluginMgr.plugin(name)
-            statuses[name] = module.driver().pause(name)
+            statuses[name] = module.driver().pause(command)
 
         return statuses
 
@@ -38,10 +38,10 @@ class ExternalApiService(LifeCycleApi):
         name: str = command.getRole()
         if name == 'all':
             for key, value in pluginMgr.modules().items():
-                statuses[key] = value.driver.restart(name)
+                statuses[key] = value.driver.restart(command)
         else:
             module = pluginMgr.plugin(name)
-            statuses[name] = module.driver().restart(name)
+            statuses[name] = module.driver().restart(command)
 
         return statuses
 
@@ -51,9 +51,9 @@ class ExternalApiService(LifeCycleApi):
         name: str = command.getRole()
         if name == 'all':
             for key, value in pluginMgr.modules().items():
-                statuses[key] = value.driver.stop(name)
+                statuses[key] = value.driver.stop(command)
         else:
             module = pluginMgr.plugin(name)
-            statuses[name] = module.driver().stop(name)
+            statuses[name] = module.driver().stop(command)
 
         return statuses
