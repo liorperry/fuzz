@@ -15,4 +15,5 @@ apiService = ExternalApiService()
 def init():
     # start status updated
     rt = RepeatedTimer(5, statusMgr.updateStatus)  # it auto-starts, no need of rt.start()
+    log_service.init()
     rt.start()
