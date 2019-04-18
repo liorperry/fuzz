@@ -50,7 +50,7 @@ def main(argv):
 
     initialize_app(app)
     log.info('>>>>> Starting development server at http://{}/api/ <<<<<'.format(app.config['SERVER_NAME']))
-    app.run(debug=FLASK_DEBUG)
+    app.run(debug=FLASK_DEBUG, host='0.0.0.0', port=8890)
 
 
 if __name__ == "__main__":
