@@ -42,15 +42,17 @@ def main(argv):
             print('test.py -o <elasticsearch host> -i <elasticsearch log index>')
             sys.exit()
         elif opt in ("-o", "--host"):
+            print('-o param"', arg)
             setup.ES_HOST = arg
         elif opt in ("-i", "--index"):
+            print('-i param"', arg)
             setup.ES_LOG_INDEX = arg
-    print('ES host"', ES_HOST)
-    print('ES log Index"', ES_LOG_INDEX)
+    print('ES host"', setup.ES_HOST)
+    print('ES log Index"', setup.ES_LOG_INDEX)
 
     initialize_app(app)
     log.info('>>>>> Starting development server at http://{}/api/ <<<<<'.format(app.config['SERVER_NAME']))
-    app.run(debug=FLASK_DEBUG, host='0.0.0.0', port=8890)
+    app.run(debug=FLASK_DEBUG, host='fuzzer', port=8890)
 
 
 if __name__ == "__main__":
