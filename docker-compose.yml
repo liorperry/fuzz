@@ -1,0 +1,37 @@
+version: '3'
+services:
+  elasticsearch:
+    environment:
+      - cluster.name=elasticsearch
+      - network.publish_host=[ELASTIC_IP]
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    image: elasticsearch:latest
+    expose:
+      - 9200
+      - 9300
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+  kibana:
+    environment:
+      - ELASTICSEARCH_HOSTS="http://localhost:9200/"
+      - SERVER_BASE_PATH="/kibana"
+    image: kibana:latest
+    expose:
+      - 5601
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+
+
+  fuzzer:
+    image: fuzz:latest
+    expose:
+      - 8890
+    ports:
+      - 8890:8890
+    depends_on:
+      - elasticsearch
+
