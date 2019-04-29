@@ -1,15 +1,19 @@
 import json
+import os
 
-from flask import abort, Flask, logging, send_from_directory, request
+from flask import abort, Flask, logging, send_from_directory, request, render_template
 from flask_swagger_ui import get_swaggerui_blueprint
 
 from model.Command import Command
-from service import apiService, pluginMgr, statusMgr
+from model.Status import Status
+from service import apiService, pluginMgr, statusMgr, log_service
 from setup import FLASK_SERVER_NAME
 from .utils import JSON_MIME_TYPE, json_response, MyEncoder
 
-app = Flask(__name__, static_url_path='/static')
-log = logging.getLogger(__name__)
+APP_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TEMPLATE_PATH = os.path.join(APP_PATH, 'static')
+
+app = Flask(__name__, static_url_path='/static',template_folder=TEMPLATE_PATH)
 
 SWAGGER_URL = '/fuzz/api/docs'  # URL for exposing Swagger UI (without trailing '/')
 API_URL = 'http://' + FLASK_SERVER_NAME + '/fuzz/swagger'  # Our API url (can of course be a local resource)
@@ -62,7 +66,22 @@ def swagger_plugin(name):
 
 # **********************************************************************************************************************
 
-@app.route('/fuzz/status')
+@app.route('/fuzz/')
+def home():
+    return render_template('home.html', endpoint='home')
+
+
+@app.route('/fuzz/init', endpoint='init')
+def init():
+    statusMgr.clientStatus = Status.INITIATED
+    # init all internal services
+    from service import init
+    init()
+    # return updates status
+    return statusMgr.toJSON()
+
+
+@app.route('/fuzz/status', endpoint='status')
 def status():
     return statusMgr.toJSON()
 
@@ -90,7 +109,7 @@ def doGet(role, command):
         abort(404)
 
     # concurrency:int, timeout:int , role:str, data:{}
-    commandEntity = Command(role, command,None,5,10)
+    commandEntity = Command(role, command, None, 5, 10)
 
     switcher = {
         "run": apiService.run,
@@ -103,8 +122,9 @@ def doGet(role, command):
     # Execute the function
     result = func(commandEntity)
     # Execute the function
-    content = json.dumps(result,cls=MyEncoder)
+    content = json.dumps(result, cls=MyEncoder)
     return content, 200, {'Content-Type': JSON_MIME_TYPE}
+
 
 @app.route('/fuzz/plugin/<string:role>/do/<string:command>', methods=['POST'], endpoint='doPost')
 def doPost(role, command):
@@ -118,7 +138,7 @@ def doPost(role, command):
 
     data = request.json
     # concurrency:int, timeout:int , role:str, data:{}
-    commandEntity = Command(role, command, data, data.get('concurrency'),data.get('timeout'))
+    commandEntity = Command(role, command, data, data.get('concurrency'), data.get('timeout'))
 
     switcher = {
         "run": apiService.run,
@@ -150,7 +170,7 @@ def doAll(command):
         "stop": apiService.stop
     }
 
-    commandEntity = Command("all", command,None,5,10)
+    commandEntity = Command("all", command, None, 5, 10)
     func = switcher.get(command, lambda: "Invalid command")
 
     # Execute the function

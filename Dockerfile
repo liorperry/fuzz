@@ -24,5 +24,4 @@ USER sanin
 WORKDIR /home/sanin
 COPY . /home/sanin/fuzz
 WORKDIR /home/sanin/fuzz
-CMD ["python app.py -o http://localhost:9200 -i logs_index"]
-EXPOSE 8890
+CMD ["python app.py -o http://elasticsearch:9200 -i logs_index"]

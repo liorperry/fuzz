@@ -4,9 +4,8 @@ import os
 import sys
 
 import setup
-from service.ApiController import initController
 from service.ApiController import app
-from setup import ES_HOST, ES_LOG_INDEX
+from service.ApiController import initController
 from setup import FLASK_SERVER_NAME
 from setup import RESTPLUS_SWAGGER_UI_DOC_EXPANSION, RESTPLUS_VALIDATE, RESTPLUS_MASK_SWAGGER, RESTPLUS_ERROR_404_HELP, \
     FLASK_DEBUG
@@ -25,8 +24,8 @@ def configure_app(flask_app):
 
 
 def initialize_app(flask_app):
-    from service import init
-    init()
+    # from service import init
+    # init()
     initController()
     configure_app(flask_app)
 
@@ -51,9 +50,9 @@ def main(argv):
     print('ES log Index"', setup.ES_LOG_INDEX)
 
     initialize_app(app)
-    log.info('>>>>> Starting development server at http://{}/api/ <<<<<'.format(app.config['SERVER_NAME']))
-    app.run(debug=FLASK_DEBUG, host='fuzzer', port=8890)
+    log.info('>>>>> Starting development server at http://{}/fuzz <<<<<'.format(app.config['SERVER_NAME']))
 
 
 if __name__ == "__main__":
     main(sys.argv[1:])
+    app.run(debug=FLASK_DEBUG, host="0.0.0.0", port=8090)

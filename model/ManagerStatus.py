@@ -10,7 +10,7 @@ from service.utils import MyEncoder
 
 class MyManagerStatus:
     def __init__(self):
-        self.clientStatus = Status.INITIATED
+        self.clientStatus = Status.NOT_INITIATED
         self.id = uuid.uuid4().hex
         self.progs = dict()
 

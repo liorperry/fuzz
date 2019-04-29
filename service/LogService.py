@@ -3,6 +3,7 @@ import json
 from elasticsearch import Elasticsearch
 
 from service.utils import MyEncoder
+from setup import ES_LOG_INDEX
 
 
 class LogService:

@@ -33,9 +33,9 @@ services:
   fuzzer:
     image: fuzz:latest
     expose:
-      - 8890
+      - 8090
     ports:
-      - 8890:8890
+      - 8090:8090
     command: python app.py -o http://elasticsearch:9200 -i logs_index
     depends_on:
       - elasticsearch
