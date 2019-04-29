@@ -24,4 +24,6 @@ USER sanin
 WORKDIR /home/sanin
 COPY . /home/sanin/fuzz
 WORKDIR /home/sanin/fuzz
+RUN chmod +x /home/sanin/fuzz/app.py
+
 CMD ["python app.py -o http://elasticsearch:9200 -i logs_index"]

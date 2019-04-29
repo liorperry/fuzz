@@ -1,12 +1,12 @@
 import json
 import os
 
-from flask import abort, Flask, logging, send_from_directory, request, render_template
+from flask import abort, Flask, send_from_directory, request, render_template
 from flask_swagger_ui import get_swaggerui_blueprint
 
 from model.Command import Command
 from model.Status import Status
-from service import apiService, pluginMgr, statusMgr, log_service
+from service import apiService, pluginMgr, statusMgr
 from setup import FLASK_SERVER_NAME
 from .utils import JSON_MIME_TYPE, json_response, MyEncoder
 

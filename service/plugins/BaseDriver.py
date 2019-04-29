@@ -94,5 +94,5 @@ class baseDriver(LifeCycleApi):
             # run generator to create input files
             self.runGenerator(runId, command, self.generator.completeHook)
             # run fuzzer based on the generated input files
-            asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+            asyncio.set_event_loop_policy(asyncio.DefaultEventLoopPolicy())
             asyncio.run(self.runFuzzer(runId, command, completeHook))
